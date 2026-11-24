@@ -105,15 +105,16 @@ body.ar *{letter-spacing:0!important}
 .proj-meta{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px;color:var(--muted)}
 .proj-head p{margin:0;font-size:clamp(17px,4.2vw,20px);line-height:1.45;max-width:60ch}
 body.ar .proj-head p{line-height:1.8}
-.media{display:grid;gap:10px}
+.media{display:grid;grid-template-columns:1fr;gap:10px}
 .media figure{margin:0;background:var(--ph);overflow:hidden}
 .media img,.media video{display:block;width:100%;height:auto}
 .pair{display:grid;grid-template-columns:1fr;gap:10px}
-.lbl{font-size:12px;color:var(--muted);padding:10px 2px 0}
+.lbl{display:none}
 @media (min-width:900px){
   .proj-in{padding-left:56px;padding-right:56px}
   .proj-head{grid-template-columns:1fr 1fr;align-items:end;padding-block:48px 56px;gap:40px}
-  .pair{grid-template-columns:1fr 1fr;max-width:1100px;width:100%;margin-inline:auto}
+  .media{grid-template-columns:1fr 1fr}
+  .media>figure:last-child:nth-child(odd){grid-column:1/-1;width:calc(50% - 7px);justify-self:center}
   .media{gap:14px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.track{scroll-behavior:auto}}
@@ -177,14 +178,15 @@ const T={
   svc:["التوجيه الفني","تصميم المواقع","تصميم واجهة وتجربة المستخدم","الهوية البصرية","الموشن جرافيك","تطوير المواقع"]}
 };
 const P=[
- {title:{en:"Buono",ar:"Buono"},service:3,img:"buono/cover.webp",proj:{
-   slug:"buono",year:"2026",meta:{en:["Brand Identity","Packaging","2026"],ar:["هوية بصرية","تغليف","2026"]},
+ {title:{en:"OTHR",ar:"OTHR"},service:3,img:"othr.webp"},
+ {title:{en:"Sincere Elegance",ar:"Sincere Elegance"},service:3,img:"sincere.webp",proj:{
+   slug:"sincere-elegance",year:"2026",meta:{en:["Brand Identity","Packaging","2026"],ar:["هوية بصرية","تغليف","2026"]},
    intro:{en:"A brand identity reflects the essence, values, and personality of a brand. The development of Bono Qatar's brand identity aims to strengthen this essence through a refreshed visual and verbal identity that embodies luxury, authenticity, and emotional connection, while ensuring consistency across all brand touchpoints.",
           ar:"الهوية البصرية تعكس جوهر العلامة وقيمها وشخصيتها. يهدف تطوير هوية بونو قطر إلى تعزيز هذا الجوهر بهوية بصرية ولفظية متجددة تجسّد الفخامة والأصالة والارتباط العاطفي، مع الحفاظ على الاتساق في كل نقاط تواصل العلامة."},
-   media:[["img","buono/slide-02.webp"],["pair",[["video","buono/logo-motion.mp4","buono/logo-poster.jpg","logo"],["video","buono/colors.mp4","buono/colors-poster.jpg","colors"]]],
-          ["img","buono/slide-04.webp"],["img","buono/slide-06.webp"],["img","buono/slide-05.webp"],["img","buono/slide-08.webp"],["img","buono/slide-09.webp"],["img","buono/slide-10.webp"],["img","buono/slide-11.webp"]]}},
- {title:{en:"OTHR",ar:"OTHR"},service:3,img:"othr.webp"},
- {title:{en:"Sincere Elegance",ar:"Sincere Elegance"},service:3,img:"sincere.webp"},
+   media:[["img","buono/page-02.webp"],["video","buono/logo-motion.mp4","buono/logo-poster.jpg","logo"],
+          ["img","buono/page-03.webp"],["img","buono/page-04.webp"],["img","buono/page-05.webp"],["img","buono/page-06.webp"],
+          ["img","buono/page-07.webp"],["video","buono/colors.mp4","buono/colors-poster.jpg","colors"],
+          ["img","buono/page-08.webp"],["img","buono/page-09.webp"],["img","buono/page-10.webp"],["img","buono/page-11.webp"],["img","buono/page-12.webp"]]}},
  {title:{en:"Filfil",ar:"Filfil"},service:0,img:"filfil.webp"},
  {title:{en:"Alameriah Contracting",ar:"العامرية للمقاولات"},service:3,img:"alameriah.jpg"},
  {title:{en:"Pool",ar:"Pool"},service:2,img:"pool.webp"}
@@ -227,8 +229,7 @@ function fillProj(p){const q=p.proj;
   $("proj-title").textContent=p.title[lang];$("proj-intro").textContent=q.intro[lang];
   $("proj-meta").innerHTML=q.meta[lang].map(m=>`<span>${m}</span>`).join("");
   const vid=(v)=>`<figure><video src="${v[1]}" poster="${v[2]}" autoplay muted loop playsinline preload="metadata"></video><figcaption class="lbl">${t(v[3])}</figcaption></figure>`;
-  $("proj-media").innerHTML=q.media.map(m=>m[0]==="img"?`<figure><img src="${m[1]}" alt="${p.title[lang]}" loading="lazy"></figure>`:
-    m[0]==="pair"?`<div class="pair">${m[1].map(vid).join("")}</div>`:"").join("");
+  $("proj-media").innerHTML=q.media.map(m=>m[0]==="img"?`<figure><img src="${m[1]}" alt="${p.title[lang]}" loading="lazy" width="1200" height="1500"></figure>`:vid(m)).join("");
   $("proj-media").querySelectorAll("video").forEach(v=>{v.muted=true;const pr=v.play();if(pr)pr.catch(()=>{})})}
 function route(){const h=location.hash.slice(1);const p=P.find(x=>x.proj&&x.proj.slug===h);
   if(p){openProj=p;fillProj(p);$("proj").classList.add("open");$("proj").scrollTop=0;document.body.style.overflow="hidden";clearInterval(timer)}
